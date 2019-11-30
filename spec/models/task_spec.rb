@@ -1,58 +1,47 @@
 require 'rails_helper'
 
 RSpec.describe Task, type: :model do
-  describe "#save" do
-    let(:user) { create :user }
-    let(:task) { user.tasks.new(title: title, status: status) }
+  describe '#save' do
+    let(:task) { build :task }
     subject { task.save }
 
     # About valid datas
-    shared_context 'valid datas' do
-      let(:title) { 'TEST EXAMPLE TITLE' }
-      let(:status) { %i[todo doing done].sample }
-    end
-
-    context "when title and status are exist" do
-      include_context 'valid datas'
+    context 'when title and status are exist' do
       it { expect(task).to be_valid }
     end
 
     # About title
-    shared_examples 'title is invalid' do
-      it do
+    context 'when title is blank' do
+      it 'is invalid' do
+        task.title = nil
         expect(task).not_to be_valid
-        expect(task.errors[:title]).to be_present
+        expect(task.errors[:title]).to include 'can\'t be blank'
       end
     end
 
-    context "when title is blank" do
-      include_context 'valid datas'
-      let(:title) { nil }
-      it_behaves_like 'title is invalid'
-    end
-
-    context "when title is overlap with other title" do
-      include_context 'valid datas'
-      let(:title) { create(:task).title }
-      it_behaves_like 'title is invalid'
+    context 'when title is overlap with other title' do
+      it 'is invalid' do
+        other_task = create :task
+        task.title = other_task.title
+        expect(task).not_to be_valid
+        expect(task.errors[:title]).to include 'has already been taken'
+      end
     end
 
     # About status
-    context "when status is null" do
-      include_context 'valid datas'
-      let(:status) { nil }
-      it "is not valid" do
+    context 'when status is null' do
+      it 'is invalid' do
+        task.status = nil
         expect(task).not_to be_valid
-        expect(task.errors[:status]).to be_present
+        expect(task.errors[:status]).to include 'can\'t be blank'
       end
     end
-    
-    describe "relations" do
-      include_context 'valid datas'
+
+    describe 'relations' do
       specify 'Tasks belongs to user' do
         task.user = nil
         expect(task).not_to be_valid
-        expect(task.errors[:user]).to be_present
+        expect(task.errors[:user]).to include 'must exist'
       end
     end
   end

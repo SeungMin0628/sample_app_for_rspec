@@ -4,7 +4,7 @@ FactoryBot.define do
 
     sequence(:title) { |n| "Test title #{n}" }
     sequence(:content) { |n| "Test content #{n}" }
-    status { :todo }
+    status { %i[todo doing done].sample }
     deadline { 1.week.after }
   end
 end
