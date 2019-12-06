@@ -16,11 +16,6 @@ module LoginMacros
     click_button 'Login'
   end
 
-  def expect_not_auth
-    expect(current_path).to eq login_path
-    expect(page).to have_content 'Login required'
-  end
-
   def logout
     click_link 'Logout'
 

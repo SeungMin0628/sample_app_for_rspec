@@ -3,18 +3,25 @@ require 'rails_helper'
 RSpec.describe "Tasks", type: :system do
   let!(:task) { create :task }
   feature 'before login' do
+    shared_examples 'not auth' do
+      scenario { expect(current_path).to eq login_path }
+      scenario { expect(page).to have_content 'Login required' }
+    end
+
     feature '#new' do
-      scenario "Guest can't access new task page" do
+      background do
         visit new_task_path
-        expect_not_auth
       end
+
+      it_behaves_like 'not auth'
     end
 
     feature '#edit' do
-      scenario "Guest can't access edit task page" do
+      background do
         visit edit_task_path(task)
-        expect_not_auth
       end
+
+      it_behaves_like 'not auth'
     end
 
     feature '#destroy' do
