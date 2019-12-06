@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "Tasks", type: :system do
-  given!(:task) { create :task }
+  let!(:task) { create :task }
   feature 'before login' do
     shared_examples 'not auth' do
       scenario { expect(current_path).to eq login_path }

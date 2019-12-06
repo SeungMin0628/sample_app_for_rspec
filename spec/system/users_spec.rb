@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe 'Users', type: :system do
-  given(:user) { create :user }
-  given(:other_user) { create :user }
+  let(:user) { create :user }
+  let(:other_user) { create :user }
 
   feature 'before login' do
     feature '#root' do
