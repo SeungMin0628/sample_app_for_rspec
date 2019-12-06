@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe 'Users', type: :system do
-  let(:user) { create :user }
-  let(:other_user) { create :user }
+  given(:user) { create :user }
+  given(:other_user) { create :user }
 
   feature 'before login' do
     feature '#root' do
-      before do
+      background do
         visit root_path
       end
 
@@ -48,7 +48,7 @@ RSpec.describe 'Users', type: :system do
     end
 
     feature '#sign_up' do
-      let(:new_user) { build :user }
+      given(:new_user) { build :user }
 
       feature 'valid' do
         scenario 'Guest can sign up with valid email and password' do
@@ -90,7 +90,7 @@ RSpec.describe 'Users', type: :system do
   end
 
   feature 'after login' do
-    before do
+    background do
       login_as user
     end
 
@@ -108,7 +108,7 @@ RSpec.describe 'Users', type: :system do
     end
 
     feature '#mypage' do
-      before do
+      background do
         visit user_path(user)
       end
 
@@ -124,7 +124,7 @@ RSpec.describe 'Users', type: :system do
     end
 
     feature '#edit' do
-      let(:update_user) { build :user }
+      given(:update_user) { build :user }
 
       feature 'valid' do
         scenario 'User can edit own profile with valid email and password' do
