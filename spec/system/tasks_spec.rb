@@ -44,7 +44,7 @@ RSpec.describe "Tasks", type: :system do
       scenario 'User can create a task' do
         title = 'Example Title'
         content = 'Example Content'
-        status = %i[todo doing done].sample.to_s
+        status = Task.statuses.keys.sample
 
         create_task(title: title, content: content, status: status)
         expect(page).to have_content 'Task was successfully created.'
@@ -55,7 +55,7 @@ RSpec.describe "Tasks", type: :system do
 
       scenario "User can't create a task without title" do
         content = 'Example Content'
-        status = %i[todo doing done].sample.to_s
+        status = Task.statuses.keys.sample
 
         create_task(title: nil, content: content, status: status)
         expect(page).to have_content "Title can't be blank"
@@ -64,7 +64,7 @@ RSpec.describe "Tasks", type: :system do
       scenario "User can't create a task use a duplicate title" do
         title = task.title
         content = 'Example Content'
-        status = %i[todo doing done].sample.to_s
+        status = Task.statuses.keys.sample
 
         create_task(title: title, content: content, status: status)
         expect(page).to have_content "Title has already been taken"
@@ -75,7 +75,7 @@ RSpec.describe "Tasks", type: :system do
       scenario 'User can edit a task' do
         title = 'Updated Title'
         content = 'Updated Content'
-        status = %i[todo doing done].sample.to_s
+        status = Task.statuses.keys.sample
 
         update_task(task: own_task, title: title, content: content, status: status)
         expect(page).to have_content "Task was successfully updated."
@@ -83,7 +83,7 @@ RSpec.describe "Tasks", type: :system do
 
       scenario "User can't edit a task without title" do
         content = 'Updated Content'
-        status = %i[todo doing done].sample.to_s
+        status = Task.statuses.keys.sample
 
         update_task(task: own_task, title: nil, content: content, status: status)
         expect(page).to have_content "Title can't be blank"
@@ -92,7 +92,7 @@ RSpec.describe "Tasks", type: :system do
       scenario "User can't edit a task use a duplicate title" do
         title = task.title
         content = 'Updated Content'
-        status = %i[todo doing done].sample.to_s
+        status = Task.statuses.keys.sample
 
         update_task(task: own_task, title: title, content: content, status: status)
         expect(page).to have_content "Title has already been taken"
