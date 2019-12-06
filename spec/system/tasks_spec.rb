@@ -23,27 +23,19 @@ RSpec.describe "Tasks", type: :system do
 
       it_behaves_like 'not auth'
     end
-
-    feature '#destroy' do
-      scenario "Guest can't destroy a task" do
-        expect {
-          visit task_path(task, method: :delete)
-        }.to change{ Task.count }.by(0)
-      end
-    end
   end
 
   feature 'after login' do
-    given(:user) { create :user }
-    given(:own_task) { user.tasks.create(title: 'Example Title', content: 'Example Content', status: :todo) }
+    given!(:user) { create :user }
+    given!(:own_task) { user.tasks.create(title: 'Example Title', content: 'Example Content', status: :todo) }
     background do
       login_as user
     end
 
     feature '#new' do
       scenario 'User can create a task' do
-        title = 'Example Title'
-        content = 'Example Content'
+        title = 'Example Create Title'
+        content = 'Example Create Content'
         status = Task.statuses.keys.sample
 
         create_task(title: title, content: content, status: status)
@@ -106,15 +98,10 @@ RSpec.describe "Tasks", type: :system do
 
     feature '#destory' do
       scenario 'User can delete own task' do
-        expect {
-          visit task_path(own_task, method: :delete)
-        }.to change{ Task.count }.by(1)
-      end
+        click_link 'Destroy'
+        accept_confirm
 
-      scenario "User can't delete another user's task" do
-        expect {
-          visit task_path(task, method: :delete)
-        }.to change{ Task.count }.by(0)
+        expect(page).to have_content 'Task was successfully destroyed.'
       end
     end
   end
